@@ -13,6 +13,7 @@ export class IncrementadorComponent implements OnInit {
   @Output() cambioValor: EventEmitter<number> =  new EventEmitter();
   constructor() { }
 
+  
   ngOnInit() {
   }
 

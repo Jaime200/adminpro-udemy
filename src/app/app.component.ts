@@ -12,4 +12,7 @@ export class AppComponent {
   constructor(public _ajustes:SettingsService){
     this._ajustes.cargarAjustes();
   }
+  ngOnInit() {
+    
+  }
 }

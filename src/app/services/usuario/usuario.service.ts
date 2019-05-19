@@ -6,6 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import swal from 'sweetalert';
 import { Router } from '@angular/router';
+import { SubirArchivoService } from '../subirArchivo/subir-archivo.service';
 
 
 @Injectable({
@@ -16,7 +17,8 @@ export class UsuarioService {
   token:string
   constructor(
     public http: HttpClient,
-    public  router:Router    
+    public  router:Router,
+    public _subirArchivoService: SubirArchivoService
   ) {
     console.log('Servicio de usuario iniciado')
     this.cargarStorage();
@@ -38,10 +40,18 @@ export class UsuarioService {
 
 
    guardarStorage(resp:any){
+    
     this.token = resp.token
-    localStorage.setItem('id',resp.UsuarioBD._id)
+    this.usuario = resp.UsuarioDB    
+    
+    localStorage.setItem('id',resp.UsuarioDB._id)
     localStorage.setItem('token',resp.token)
-    localStorage.setItem('usario',JSON.stringify(resp.UsuarioBD))
+    localStorage.setItem('usario',JSON.stringify(resp.UsuarioDB))
+   }
+
+   guardarStorageUsuario(usuario:Usuario){
+    //this.usuario =usuario   
+    localStorage.setItem('usario',JSON.stringify(usuario))
    }
 
    login(usuario:Usuario, recordar: boolean = false){
@@ -54,7 +64,7 @@ export class UsuarioService {
     return this.http.post( url, usuario)
                     .pipe(
                       map( (resp:any) =>{
-                        console.log(resp)                         
+                                            
                         this.guardarStorage(resp)
                           return true
                       })
@@ -92,8 +102,33 @@ export class UsuarioService {
                     
    }
 
+   updateUsuario(usuario:Usuario){
+    let url =   `${URL_SERVICIOS}/usuario/${this.usuario._id}?token=${this.token}`    
+    
+    return this.http.put(url, usuario)
+                    .pipe(
+                      map((resp:any)=>{                        
+                        
+                        this.guardarStorage(resp)
+                        swal('Usuario actualizado',usuario.nombre,'success');
+                        return true
+                      })
+                    )
+   }
+
    getLocalStorageEmail(): string {
      return localStorage.getItem('email') || ''
+   }
+
+   cambiarImagen(Archivo:File, id:string){
+    let observer =  this._subirArchivoService.subirArchivo(Archivo,'usuarios',id).subscribe(
+       (resp: any)=>{
+         this.usuario.img = resp.usuarios.img
+         swal('Imagen actualizada',`La imagen del usuario ${this.usuario.nombre} se ha actualizado`,'success');
+         console.log(resp)
+         this.guardarStorageUsuario(resp.usuarios)
+       }
+     )
    }
 
    

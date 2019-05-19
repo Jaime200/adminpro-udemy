@@ -1,3 +1,4 @@
+import { ProfileComponent } from './profile/profile.component';
 import { RouterModule,Routes } from "@angular/router";
 import { PagesComponent } from "./pages.component";
 import { DashboardComponent } from "./dashboard/dashboard.component";
@@ -18,6 +19,7 @@ import { LoginGuardGuard } from "../services/index.service";
         { path: 'promesas', component: PromesasComponent, data : { titulo :'Promesas'}},
         { path: 'rxjs', component: RxjsComponent, data : { titulo :'RxJS'} },
         { path: 'account', component: AccountSettingsComponent, data : { titulo :'Ajustes del tema'}},
+        { path: 'profile', component : ProfileComponent, data : {titulo : 'Perfil de usuario'}},
         { path: '', redirectTo: '/dashboard', pathMatch : 'full'},
       ]          
     }];

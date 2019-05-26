@@ -8,6 +8,8 @@ import { AccountSettingsComponent } from "./account-settings/account-settings.co
 import { PromesasComponent } from "./promesas/promesas.component";
 import { RxjsComponent } from './rxjs/rxjs.component';
 import { LoginGuardGuard } from "../services/index.service";
+//MANTENIMIENTO
+import { UsuariosComponent } from './usuarios/usuarios.component';
   const pageRoutes : Routes = [
       { path : '', 
       component : PagesComponent,
@@ -20,6 +22,8 @@ import { LoginGuardGuard } from "../services/index.service";
         { path: 'rxjs', component: RxjsComponent, data : { titulo :'RxJS'} },
         { path: 'account', component: AccountSettingsComponent, data : { titulo :'Ajustes del tema'}},
         { path: 'profile', component : ProfileComponent, data : {titulo : 'Perfil de usuario'}},
+        //MANTENIMIENTO
+        { path: 'usuarios', component : UsuariosComponent, data : {titulo : 'Mantenimiento de usuarios'}},
         { path: '', redirectTo: '/dashboard', pathMatch : 'full'},
       ]          
     }];

@@ -17,6 +17,7 @@ import { RegisterComponent } from './login/register.component';
 
 //Servicios
 import { ServiceModule } from './services/service.module';
+
 // import { IncrementadorComponent } from './components/incrementador/incrementador.component';
 
 
@@ -25,7 +26,7 @@ import { ServiceModule } from './services/service.module';
   declarations: [
     AppComponent,
     LoginComponent,    
-    RegisterComponent, 
+    RegisterComponent 
     // IncrementadorComponent
   ],
   imports: [

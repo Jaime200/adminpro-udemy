@@ -19,7 +19,6 @@ export class ImagePipe implements PipeTransform {
      
     switch(tipo){
       case 'usuarios':
-      console.log(`${url}/usuarios/${img}`)
        return `${url}/usuarios/${img}`
       break;
       case 'medicos': return `${url}/medicos/${img}`

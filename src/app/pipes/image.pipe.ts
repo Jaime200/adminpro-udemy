@@ -23,7 +23,7 @@ export class ImagePipe implements PipeTransform {
       break;
       case 'medicos': return `${url}/medicos/${img}`
       break;
-      case 'hospitals':  return `${url}/hospitales/${img}`
+      case 'hospitales': return `${url}/hospitales/${img}`
       break;
       default: 
       console.log('Tipos de imagen no existe, usuarios, hospitales, medicos')

@@ -37,11 +37,11 @@ export class UsuariosComponent implements OnInit {
     )
   }
 
+
   cargarUsuarios(){
     this.cargando = true
     this._usuariosService.cargarusuarios(this.desde)
                         .subscribe( (resp: any)=>{
-                            console.log(resp);
                             this.totalRegistro = resp.total;
                             this.usuarios = resp.usuarios;
                             this.cargando = false
@@ -66,18 +66,15 @@ export class UsuariosComponent implements OnInit {
       this.cargarUsuarios();
       return 
     }
-    console.log(termino)
     this.cargando = true
    this._usuariosService.buscarUsuarios(termino)
-                        .subscribe((usuarios:Usuario[])=>{
-                          console.log(usuarios)       
+                        .subscribe((usuarios:Usuario[])=>{    
                           this.usuarios = usuarios                   
                           this.cargando = false
                         })
   }
 
-  borrarUsuario(usuario:Usuario){
-    console.log(usuario)
+  borrarUsuario(usuario:Usuario){    
     if(usuario._id === this._usuariosService.usuario._id){
       swal('Error al borrar al usuario','No se puede borrar a sí mismo','error')
       return
@@ -88,8 +85,7 @@ export class UsuariosComponent implements OnInit {
         icon: `warning`,
         buttons:  ['Cancelar', 'Aceptar'],
         dangerMode: true,
-      }).then((borrar) => {
-        console.log(borrar)
+      }).then((borrar) => {        
         if (borrar) {
           this._usuariosService.borrarUsuario(usuario._id).subscribe((resp:any)=>{
               console.log(resp);

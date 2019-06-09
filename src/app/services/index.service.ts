@@ -9,4 +9,5 @@ export { SidebarService } from "./shared/sidebar.service";
 
 //Guard
 export { LoginGuardGuard } from './guards/login-guard.guard';
+export { AdminGuard } from './guards/admin.guard';
 

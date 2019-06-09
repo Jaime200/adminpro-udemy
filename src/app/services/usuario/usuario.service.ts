@@ -3,18 +3,22 @@ import Usuario from '../../models/usuario.model';
 import { URL_SERVICIOS } from '../../config/config';
 import { HttpClient } from '@angular/common/http';
 
-import { map } from 'rxjs/operators';
+import { map, catchError,  } from 'rxjs/operators';
+import { throwError } from 'rxjs/internal/observable/throwError';
+
 import swal from 'sweetalert';
 import { Router } from '@angular/router';
 import { SubirArchivoService } from '../subirArchivo/subir-archivo.service';
+
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class UsuarioService {
-  usuario:Usuario
-  token:string
+  usuario:Usuario;
+  token:string;
+  menu:any;
   constructor(
     public http: HttpClient,
     public  router:Router,
@@ -32,9 +36,11 @@ export class UsuarioService {
      if(localStorage.getItem('token')){
        this.token = localStorage.getItem('token');
        this.usuario = JSON.parse(localStorage.getItem('usario'));
+       this.menu =  JSON.parse(localStorage.getItem('menu'));
      }else{
        this.token = '';
        this.usuario = null;
+       this.menu = null;
      }
    }
 
@@ -47,6 +53,14 @@ export class UsuarioService {
     localStorage.setItem('id',resp.UsuarioDB._id)
     localStorage.setItem('token',resp.token)
     localStorage.setItem('usario',JSON.stringify(resp.UsuarioDB))
+    if(resp.menu){
+      localStorage.setItem('menu',JSON.stringify(resp.menu))
+      this.menu = resp.menu
+    }
+    else{
+      localStorage.setItem('menu',JSON.stringify(this.menu))
+    }
+    
    }
 
    guardarStorageUsuario(usuario:Usuario){
@@ -63,12 +77,16 @@ export class UsuarioService {
     }
     return this.http.post( url, usuario)
                     .pipe(
-                      map( (resp:any) =>{
-                                            
+                      map( (resp:any) =>{               
                         this.guardarStorage(resp)
                           return true
-                      })
-                    );
+                      }),
+                      catchError( err => {
+                        console.log(err.error.mensaje);
+                        swal('Error en el login', err.error.mensaje,'error' );
+                        return  throwError (err);
+                      }),
+                    )
    }
 
    loginGoogle(token:string){
@@ -79,15 +97,21 @@ export class UsuarioService {
                 map((resp:any)=>{                  
                   this.guardarStorage(resp)
                   return true
-                })
-              )
+                }),
+                catchError( err => {
+                  swal('Error en el login de google', 'Error al iniciar sesión con google','error' );
+                  return  throwError (err);
+                }),
+              );
    }
+   
 
    logout(){
      this.usuario = null;
      this.token = ''
      localStorage.removeItem('token')
      localStorage.removeItem('usuario')
+     localStorage.removeItem('menu')
       this.router.navigate(['/login'])
    }
 
@@ -95,11 +119,15 @@ export class UsuarioService {
     let url =   `${URL_SERVICIOS}/usuario`
     return this.http.post(url, usuario)
                     .pipe(
-                      map( (resp: any) => {
-                        console.log(resp)
+                      map( (resp: any) => {                        
                         swal('Usuario creado', resp.UsuarioDB.email, 'success')
-                      return resp.usuario;
-                    }));
+                        return resp.usuario;
+                      }),
+                      catchError( err => {
+                        swal(err.error.mensaje, err.error.errors.message,'error' );
+                        return  throwError (err);
+                      }),                    
+                    );
                     
    }
 
@@ -112,11 +140,14 @@ export class UsuarioService {
                          
                         if(usuario._id === this.usuario._id){
                           this.guardarStorage(resp)
-                        }
-                        
+                        }                        
                         swal('Usuario actualizado',usuario.nombre,'success');
                         return true
-                      })
+                      }),
+                      catchError( err => {
+                        swal(err.error.mensaje, err.error.errors.message,'error' );
+                        return  throwError (err);
+                      }),
                     )
    }
 

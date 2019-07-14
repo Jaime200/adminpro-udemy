@@ -1,3 +1,4 @@
+
 import { Injectable } from '@angular/core';
 import Usuario from '../../models/usuario.model';
 import { URL_SERVICIOS } from '../../config/config';
@@ -5,6 +6,7 @@ import { HttpClient } from '@angular/common/http';
 
 import { map, catchError,  } from 'rxjs/operators';
 import { throwError } from 'rxjs/internal/observable/throwError';
+
 
 import swal from 'sweetalert';
 import { Router } from '@angular/router';
@@ -68,6 +70,25 @@ export class UsuarioService {
     localStorage.setItem('usario',JSON.stringify(usuario))
    }
 
+   renuevaToken(){
+    let url =   `${URL_SERVICIOS}/login/renuevaToken?token=${this.token}`;
+    return this.http.get(url)
+                    .pipe(
+                    map((resp:any)=>{
+                        this.token = resp.token;
+                        localStorage.setItem('token',this.token);
+                        console.log('token renovado');
+                        return true;
+                    }),
+                    catchError( err => {
+                      console.log(err);
+                      this.router.navigate(['/login'])
+                      swal('No se pudo renovar token', 'No fue posible renovar token','error' );
+                      return  throwError (err);
+                    }),
+                    );
+    }
+
    login(usuario:Usuario, recordar: boolean = false){
     let url =   `${URL_SERVICIOS}/login`
     if(recordar){
@@ -82,7 +103,7 @@ export class UsuarioService {
                           return true
                       }),
                       catchError( err => {
-                        console.log(err.error.mensaje);
+                        console.log(err);
                         swal('Error en el login', err.error.mensaje,'error' );
                         return  throwError (err);
                       }),
@@ -167,8 +188,17 @@ export class UsuarioService {
    }
 
    cargarusuarios(desde:number){
-    let url =   `${URL_SERVICIOS}/usuario?desde=${desde}`
+    let url =   `${URL_SERVICIOS}/usuario?token=${this.token}&desde=${desde}`
+    console.log(url)
     return this.http.get( url )
+                    .pipe(
+                      catchError(err => { 
+                        console.log(err)                         
+                        console.log(err.error)                 
+                        swal(err.error.mensaje, err.error.errors.error,'error' );
+                        return  throwError (err);
+                      })  
+                    )
    }
 
    buscarUsuarios(termino:string){
@@ -184,9 +214,16 @@ export class UsuarioService {
      console.log(url)
      return this.http.delete(url)
                       .pipe(
+
                         map( resp =>{
                           swal('Usuario borrado','El usuario ha sido borrado correctamente', 'success')
-                        })
+                        }),
+                        catchError(err => { 
+                          console.log(err)                         
+                          console.log(err.error)                 
+                          swal(err.error.mensaje, err.error.errors.error,'error' );
+                          return  throwError (err);
+                        })                      
                       )
 
    }

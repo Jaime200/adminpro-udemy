@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { HospitalService } from '../../services/index.service';
 import { MedicoService } from '../../services/index.service';
-import { map } from 'rxjs/internal/operators/map';
 import Hospital from '../../models/hospital.model';
 import { Medico } from '../../models/medico.model';
 import { Router, ActivatedRoute, Params } from '@angular/router';

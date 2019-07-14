@@ -19,6 +19,8 @@ import { RegisterComponent } from './login/register.component';
 import { ServiceModule } from './services/service.module';
 
 // import { IncrementadorComponent } from './components/incrementador/incrementador.component';
+import { PagesComponent } from './pages/pages.component';
+import { SharedModule } from './shared/shared.module';
 
 
 
@@ -27,15 +29,16 @@ import { ServiceModule } from './services/service.module';
     AppComponent,
     LoginComponent,    
     RegisterComponent, 
+    PagesComponent
     // IncrementadorComponent
   ],
   imports: [
     BrowserModule,
-    APP_ROUTE,
-    PagesModule,
+    APP_ROUTE,    
     FormsModule,
     ReactiveFormsModule,
     ServiceModule,
+    SharedModule
   ],
   providers: [],
   bootstrap: [AppComponent]
